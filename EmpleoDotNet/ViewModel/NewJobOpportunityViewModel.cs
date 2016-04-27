@@ -36,8 +36,12 @@ namespace EmpleoDotNet.ViewModel
         public string CompanyUrl { get; set; }
 
         [Required(ErrorMessage = "El campo email es requerido"), StringLength(int.MaxValue), EmailAddress(ErrorMessage = "Email invalido.")]
-        [Display(Name = "Email"), ]
+        [Display(Name = "Email")]
         public string CompanyEmail { get; set; }
+
+        [Required(ErrorMessage = "El campo como aplicar es requerido"), StringLength(int.MaxValue)]
+        [Display(Name = "Cómo Aplicar")]
+        public string HowToApply { get; set; }
 
         [StringLength(int.MaxValue), Url(ErrorMessage = "El Logo de la compañia debe ser un Url valido.")]
         [Display(Name = "Logo")]
@@ -51,9 +55,11 @@ namespace EmpleoDotNet.ViewModel
         public string LocationLongitude { get; set; }
         public string LocationPlaceId { get; set; }
 
+        [Display(Name = "Tipo")]
+        public JobType JobType { get; set; }
+
         public Core.Domain.JobOpportunity ToEntity()
-        {
-            var entity = new Core.Domain.JobOpportunity
+            => new Core.Domain.JobOpportunity
             {
                 Title = Title,
                 Category = Category,
@@ -63,22 +69,16 @@ namespace EmpleoDotNet.ViewModel
                 CompanyLogoUrl = CompanyLogoUrl,
                 CompanyEmail = CompanyEmail,
                 PublishedDate = DateTime.Now,
-                IsRemote = IsRemote
-            };
-
-            if (!string.IsNullOrWhiteSpace(LocationName) &&
-                !string.IsNullOrWhiteSpace(LocationPlaceId))
-            {
-                entity.JobOpportunityLocation = new JobOpportunityLocation
+                IsRemote = IsRemote,
+                JobType = JobType,
+                HowToApply = HowToApply,
+                JobOpportunityLocation = new JobOpportunityLocation
                 {
                     Latitude = LocationLatitude,
                     Longitude = LocationLongitude,
                     Name = LocationName,
                     PlaceId = LocationPlaceId
-                };
-            }
-
-            return entity;
-        }
+                }
+            };
     }
 }

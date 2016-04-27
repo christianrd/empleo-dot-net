@@ -21,6 +21,9 @@ namespace EmpleoDotNet.ViewModel.JobOpportunity
         [Display(Name = "Categoría")]
         public JobCategory Category { get; set; }
 
+        [Display(Name = "Tipo")]
+        public JobType JobType { get; set; }
+
         [Required(ErrorMessage = "Debes especificar al menos un requisito."), StringLength(int.MaxValue)]
         [Display(Name = "Requisitos para aplicar")]
         public string Description { get; set; }
@@ -36,6 +39,10 @@ namespace EmpleoDotNet.ViewModel.JobOpportunity
         [Required(ErrorMessage = "El campo correo electrónico es requerido"), StringLength(int.MaxValue), EmailAddress(ErrorMessage = "Correo electrónico inválido.")]
         [Display(Name = "Correo electrónico"),]
         public string CompanyEmail { get; set; }
+
+        [Required(ErrorMessage = "El campo como aplicar es requerido"), StringLength(int.MaxValue)]
+        [Display(Name = "Cómo Aplicar")]
+        public string HowToApply { get; set; }
 
         [StringLength(int.MaxValue), Url(ErrorMessage = "El logo de la compañía debe ser un Url válido.")]
         [Display(Name = "Logo (opcional)")]
@@ -94,6 +101,8 @@ namespace EmpleoDotNet.ViewModel.JobOpportunity
                 CompanyEmail = CompanyEmail,
                 PublishedDate = DateTime.Now,
                 IsRemote = IsRemote,
+                JobType = JobType,
+                HowToApply = HowToApply,
                 JoelTest = new JoelTest
                 {
                     HasSourceControl = this.HasSourceControl,

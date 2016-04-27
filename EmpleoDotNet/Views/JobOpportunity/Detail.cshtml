@@ -8,27 +8,33 @@
     ViewBag.Description = Regex.Replace(Model.Description, @"<(.|\n)*?>", "");
     ViewBag.ImageUrl = Model.CompanyLogoUrl;
 }
+@section scripts
+{
+    @Scripts.Render("~/Scripts/JobOpportunity/Likes.js")
+}
 
 <section id="title">
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center">
                 <h1>@Model.Title</h1>
-                <h4>
+                <div class="job-title">
                     @if (Model.JobOpportunityLocation == null)
                     {
-                        <span><i class="fa fa-map-marker"></i>N/A</span>
+                        <h5><i class="fa fa-map-marker"></i> N/A</h5>
                     }
-                    else
-                    {
-                        <span><i class="fa fa-map-marker"></i>@Model.JobOpportunityLocation.Name</span>
+                    else {
+                        <h5><i class="fa fa-map-marker"></i> @Model.JobOpportunityLocation.Name</h5>
                     }
-                    <span><i class="fa fa-cog"></i>@Model.Category.ToEnumDescription()</span>
+
+                    <h5><i class="fa fa-cog"></i> @Model.Category.ToEnumDescription()</h5>
+                    
                     @if (Model.IsRemote)
                     {
-                        <span><i class="fa fa-globe"></i>Remoto</span>
+                        <h5><i class="fa fa-globe"></i> Remoto</h5>
                     }
-                </h4>
+                    <h5><i class="fa fa-info"></i> @Model.JobType.ToEnumDescription()</h5>
+                </div>
                 <h5 class="text-center"><i class="fa fa-calendar"></i> @Model.Created.ToString("dd MMMM yyyy")</h5>
             </div>
         </div>
@@ -45,9 +51,18 @@
                         @Html.Raw(Model.Description)
                     </article>
                     <h3>Como aplicar</h3>
-                    <p>
-                        Enviar CV <a href="mailto:@Model.CompanyEmail">@Model.CompanyEmail</a>
-                    </p>
+                    @if (Model.HowToApply != null)
+                    {
+                        <article>
+                            @Html.Raw(Model.HowToApply)
+                        </article>
+                    }
+                    else {
+                        <p>
+                            Enviar CV <a href="mailto:@Model.CompanyEmail">@Model.CompanyEmail</a>
+                        </p>
+                    }
+                   
                 </article>
                 <article>
                     @if (Model.JoelTest != null)
@@ -57,6 +72,24 @@
                 </article>
             </div>
             <div class="col-sm-4" id="sidebar">
+                <div class="sidebar-widget" id="likes">
+                    <h2>Likes</h2>
+                    <div>
+                        @{
+                            var disabledClass = @Html.Raw(!ViewBag.CanLike ? "disabled" : "");
+                        }
+                        <input type="hidden" id="like-url" value="@Url.Action("Like")" />
+                        <a href="#" class="like-job like @disabledClass" title="Me gusta" data-job="@Model.Id" data-like="true" data-canlike="@ViewBag.CanLike.ToString().ToLower()">
+                            <i class="fa fa-lg fa-thumbs-o-up"></i>
+                            <span>@Model.JobOpportunityLikes.Count(x => x.Like).FormatThousand()</span>
+                        </a>
+                        &nbsp;
+                        <a href="#" class="like-job dislike @disabledClass" title="No me gusta" data-job="@Model.Id" data-like="false" data-canlike="@ViewBag.CanLike.ToString().ToLower()">
+                            <i class="fa fa-lg fa-thumbs-o-down"></i>
+                            <span>@Model.JobOpportunityLikes.Count(x => !x.Like).FormatThousand()</span>
+                        </a>
+                    </div>
+                </div>
                 <div class="sidebar-widget" id="share">
                     <h2>Compartir</h2>
                     <ul>
@@ -71,14 +104,15 @@
 
                 <div class="sidebar-widget" id="company">
                     <h2>Sobre la Compañía</h2>
+
                     <a href="@Model.CompanyUrl">
                         @if (string.IsNullOrWhiteSpace(@Model.CompanyLogoUrl))
                         {
-                            <img src="~/Content/img/company-logo-placeholder.png" />
+                            <img src="~/Content/img/company-logo-placeholder.png" alt="Logo Compañ&iacute;a" class="img-company img-responsive" />
                         }
                         else
                         {
-                            <img src="@Model.CompanyLogoUrl" alt="" class="img-responsive">
+                            <img src="@Model.CompanyLogoUrl" alt="Logo Compañ&iacute;a" class="img-company img-responsive">
                         }
                     </a>
                     <h5>@Model.CompanyName</h5>
@@ -100,7 +134,7 @@
                             }
                         </ul>
                     </div>
-                        <hr>
+                    <hr>
                 }
 
                 <div class="sidebar-widget" id="view-count">

@@ -71,11 +71,22 @@ namespace EmpleoDotNet.Core.Domain
         /// </summary>
         public int ViewCount { get; set; }
 
+        /// <summary>
+        /// Especifica si el empleo es Tiempo Completo, Independiente, etc.
+        /// </summary>
+        public JobType JobType { get; set; }
+
         public int? JoelTestId { get; set; }
 
         public bool IsActive { get; set; } = true;
 
         public int? JobOpportunityLocationId { get; set; }
+
+        public int? UserProfileId { get; set; } 
+        /// <summary>
+        /// para especificar la forma de como se aplica para el empleo
+        /// </summary>
+        public string HowToApply { get; set; }
 
         #endregion
 
@@ -87,7 +98,11 @@ namespace EmpleoDotNet.Core.Domain
 
         public JobOpportunityLocation JobOpportunityLocation { get; set; }
 
+        public virtual UserProfile UserProfile { get; set; }
+
         public Location Location { get; set; }
+
+        public List<JobOpportunityLike> JobOpportunityLikes { get; set; }
 
         #endregion
     }
